@@ -120,7 +120,7 @@ Every distinct threshold-induced accept/reject pattern is evaluated with its own
 Default benchmark result:
 
 ```text
-best lambda                    = 1.749480
+best lambda                     = 1.749480
 exact expected threshold reward = 661.625317
 exact DP advantage              = 26.722630
 ```
@@ -155,6 +155,40 @@ The experiment reports:
 - seeded random feasible acceptance.
 
 No RL method is claimed to outperform the exact DP oracle. The purpose of the repo is to show how an OR-Gym environment can be solved and benchmarked with a classical exact OR method.
+
+## Validated GitHub Actions run
+
+The first full GitHub Actions run used CPython 3.12.14, installed `or-gymnasium` directly from pinned upstream commit `86ed6e7b5d9c12e9f7767073b58f9ba814ac4f9a`, and passed the pure DP self-test plus all nine regression/integration tests.
+
+The integration suite verified:
+
+- actual `Knapsack-v3` registration through Gymnasium;
+- the online action mask;
+- the `step_counter` safe-reset workaround;
+- feasibility of a DP-controlled environment episode;
+- Monte Carlo consistency with the exact Bellman expectation.
+
+The 1000-episode smoke experiment produced:
+
+```text
+exact Bellman expected reward          688.347948
+best static threshold                    1.749480
+static threshold exact expectation     661.625317
+
+exact DP Monte Carlo mean              686.074
+95% CI                           [677.876, 694.272]
+
+optimized static threshold mean        660.634
+95% CI                           [652.118, 669.150]
+
+always accept if feasible mean         319.754
+random feasible p=0.50 mean            273.592
+
+paired DP - threshold mean difference   25.440
+95% paired CI                     [22.245, 28.635]
+```
+
+The Monte Carlo figures are finite-sample environment evaluations. The `688.347948` DP value and `661.625317` threshold value are exact expectations for the declared benchmark model.
 
 ## Run
 
